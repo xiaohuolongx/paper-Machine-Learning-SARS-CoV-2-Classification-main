@@ -1,0 +1,4 @@
+Alpha 0
+Delta 1
+Omicron 2
+Else 3
