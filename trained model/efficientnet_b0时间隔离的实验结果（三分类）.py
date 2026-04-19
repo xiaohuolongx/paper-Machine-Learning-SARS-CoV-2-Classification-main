@@ -1,0 +1,97 @@
+# model settings
+
+model_cfg = dict(
+    backbone=dict(type='EfficientNet', arch='b0'),
+    neck=dict(type='GlobalAveragePooling'),
+    head=dict(
+        type='LinearClsHead',
+        num_classes=3,
+        in_channels=1280,
+        loss=dict(type='CrossEntropyLoss', loss_weight=1.0),
+        topk=(1,),
+        ))
+
+# dataloader pipeline
+img_norm_cfg = dict(
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+train_pipeline = [#circos图专用
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='RandomResizedCrop',
+        size=224,
+        efficientnet_style=True,
+        interpolation='bicubic'),
+    #dict(type='RandomFlip', flip_prob=0.5, direction='horizontal'),
+    dict(type='ColorJitter', brightness=0.3, contrast=0.3, saturation=0.2), # 抗颜色漂移
+    dict(type='RandomGrayscale', gray_prob=0.2),  #强制模型不靠颜色
+
+    dict(type='Normalize', **img_norm_cfg),
+    dict(type='ImageToTensor', keys=['img']),
+    dict(type='ToTensor', keys=['gt_label']),
+    dict(type='Collect', keys=['img', 'gt_label'])
+]
+val_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='CenterCrop',
+        crop_size=224,
+        efficientnet_style=True,
+        interpolation='bicubic'),
+    dict(type='Normalize', **img_norm_cfg),
+    dict(type='ImageToTensor', keys=['img']),
+    dict(type='Collect', keys=['img'])
+]
+
+# train
+data_cfg = dict(
+    batch_size = 16,
+    num_workers = 4,
+    train = dict(
+        pretrained_flag = True,
+        pretrained_weights = 'datasets/efficientnet-b0_3rdparty_8xb32_in1k_20220119-a7e2a0b1.pth',
+        freeze_flag = False,
+        freeze_layers = ('backbone',),
+        epoches = 100,
+    ),
+    test=dict(
+        ckpt = 'logs/EfficientNet/2026-04-19-15-25-26/Val_Epoch030-Acc97.222.pth',
+        metrics = ['accuracy', 'precision', 'recall', 'f1_score', 'confusion'],
+        metric_options = dict(
+            topk = (1,),
+            thrs = None,
+            average_mode='none'
+    )
+    )
+)
+'''
+# batch 32
+# lr = 0.1 *32 /256
+# optimizer
+optimizer_cfg = dict(
+    type='SGD',
+    lr=0.1 * 16/256,
+    momentum=0.9,
+    weight_decay=1e-4)
+
+# learning 
+lr_config = dict(
+    type='StepLrUpdater',
+    step=[30, 60, 90]
+)
+'''
+# optimizer （更适合小数据集、域偏移）
+optimizer_cfg = dict(
+    type='AdamW',       # 比 SGD 强太多！
+    lr=1e-4,            # 稳定、泛化强
+    weight_decay=0.01)
+
+# learning rate （余弦退火，避免局部最优）
+lr_config = dict(
+    type='CosineAnnealingLrUpdater',
+    by_epoch=False,
+    min_lr_ratio=1e-2,
+    warmup='linear',
+    warmup_ratio=1e-3,
+    warmup_iters=5,
+    warmup_by_epoch=True
+)
