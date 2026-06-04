@@ -69,3 +69,90 @@ datasets_path   = '你的数据集路径'
 python tools/get_annotation.py
 ```
 - 在`paper-Machine Learning-SARS-CoV-2-Classification-main/datas`下得到生成的数据集信息文件`train.txt`与`test.txt`
+
+
+**Creating Your Own Dataset**
+===========================
+
+## 1. Creating the Label File
+
+- This demo uses the SARS‑CoV‑2 dataset as an example. The directory structure is as follows:
+
+```
+├─data
+│  ├─Alpha
+│  │      95_2020-11-13.png
+│  │      95_2020-12-07.png
+│  │      ...
+│  ├─Delta
+│  │      96_2021-04-30.png
+│  │      96_2021-05-17.png
+│  │      ...
+│  ├─Omicron
+│  │      95_2022-07-20.png
+│  │      96_2021-12-21.png
+│  │      ...
+│  ├─Else
+│  │      95_2020-10-21.png
+│  │      95_2020-10-26.png
+│  │      ...
+```
+
+- Create a label file `annotations.txt` under `paper-Machine Learning-SARS-CoV-2-Classification-main/datas/`. Write each line as `class_name index`:
+
+```
+Alpha 0
+Delta 1
+Omicron 2
+Else 3
+```
+
+## 2. Splitting the Dataset
+
+- Open `paper-Machine Learning-SARS-CoV-2-Classification-main/tools/split_data.py`
+- Modify the `original dataset path` and the `save path after splitting`. It is strongly recommended **not** to change the save path `datasets`, as the subsequent steps operate on this folder by default.
+
+```
+init_dataset = 'A:/circos-data-set'
+new_dataset = 'A:/paper-Machine Learning-SARS-CoV-2-Classification-main/datasets'
+```
+
+- Open a terminal in `paper-Machine Learning-SARS-CoV-2-Classification-main/` and run:
+
+```
+python tools/split_data.py
+```
+
+- The resulting split dataset will have the following structure:
+
+```
+├─...
+├─datasets
+│  ├─test
+│  │  ├─Alpha
+│  │  ├─Delta
+│  │  ├─Omicron
+│  │  ├─Else
+│  └─train
+│      ├─Alpha
+│      ├─Delta
+│      ├─Omicron
+│      ├─Else
+├─...
+```
+
+## 3. Generating Dataset Information Files
+
+- Ensure that the split dataset is located under `paper-Machine Learning-SARS-CoV-2-Classification-main/datasets`. If not, modify the dataset path in `get_annotation.py`:
+
+```
+datasets_path   = 'your dataset path'
+```
+
+- Open a terminal in `paper-Machine Learning-SARS-CoV-2-Classification-main/` and run:
+
+```
+python tools/get_annotation.py
+```
+
+- The generated dataset information files `train.txt` and `test.txt` will appear under `paper-Machine Learning-SARS-CoV-2-Classification-main/datas`.
