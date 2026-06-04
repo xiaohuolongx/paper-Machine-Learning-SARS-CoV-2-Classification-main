@@ -60,20 +60,22 @@ python tools/train.py \
     [--split-validation] \
     [--ratio] \
     [--deterministic] \
+```
+
 Description of all parameters:
 
-config: Path to the model configuration file.
+- `config`: Path to the model configuration file.
 
---resume-from: Resume training from an interruption. Provide the path to the weight file. Make sure to resume correctly from a Last_Epoch***.pth file, e.g., --resume-from logs/SwinTransformer/2022-02-08-08-27-41/Last_Epoch15.pth.
+- `--resume-from`: Resume training from an interruption. Provide the path to the weight file. Make sure to resume correctly from a Last_Epoch***.pth file, e.g., --resume-from logs/SwinTransformer/2022-02-08-08-27-41/Last_Epoch15.pth.
 
---seed: Set the random seed. Defaults to the environment setting.
+- `--seed`: Set the random seed. Defaults to the environment setting.
 
---device: Set training on GPU or CPU.
+- `--device`: Set training on GPU or CPU.
 
---gpu-id: Specify the GPU device. Default is 0 (single-card setups usually keep it as 0, no need to change).
+- `--gpu-id`: Specify the GPU device. Default is 0 (single-card setups usually keep it as 0, no need to change).
 
---split-validation: Whether to split a validation set from the training set. Default split ratio is 0.2. Otherwise, the test set is directly used for validation.
+- `--split-validation`: Whether to split a validation set from the training set. Default split ratio is 0.2. Otherwise, the test set is directly used for validation.
 
---ratio: Ratio for splitting the validation set from the training set. Default is 0.2. A random fold is selected from the training set after shuffling.
+- `--ratio`: Ratio for splitting the validation set from the training set. Default is 0.2. A random fold is selected from the training set after shuffling.
 
---deterministic: Related to multi-GPU training; no need to set for now.
+- `--deterministic`: Related to multi-GPU training; no need to set for now.
