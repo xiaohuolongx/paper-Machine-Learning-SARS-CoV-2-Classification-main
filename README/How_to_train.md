@@ -66,7 +66,7 @@ Description of all parameters:
 
 - `config`: Path to the model configuration file.
 
-- `--resume-from`: Resume training from an interruption. Provide the path to the weight file. Make sure to resume correctly from a Last_Epoch***.pth file, e.g., --resume-from logs/SwinTransformer/2022-02-08-08-27-41/Last_Epoch15.pth.
+- `--resume-from`: Resume training from an interruption.` Provide the path to the weight file. Make sure to resume correctly from a Last_Epoch***.pth file`, e.g., --resume-from logs/SwinTransformer/2022-02-08-08-27-41/Last_Epoch15.pth.
 
 - `--seed`: Set the random seed. Defaults to the environment setting.
 
