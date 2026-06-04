@@ -71,3 +71,83 @@ python script.py \
 ```
 python tools/vis_cam.py --alpha ./images/alpha.png --delta ./images/delta.png --omicron ./images/omicron.png --else-cat ./images/else.png ./configs/resnet50.py --output-dir ./cam_results --method gradcam --dpi 600 --crop-pixels 100 --target-size 1000 --cam-alpha 0.6
 ```
+
+
+**Class Activation Map Visualization**
+===========================
+
+This is a Python script for generating Class Activation Map (CAM) visualizations, specifically designed for four image classes (Alpha, Delta, Omicron, Else) and outputs high‑quality PDF files.
+
+- **High‑quality output**: generates PDF files with high DPI (600 by default)
+- **Flexible image processing**: supports cropping, resizing, detail extraction, etc.
+
+Currently supported methods:
+
+| Method       | What it does |
+|:------------:|:------------:|
+| GradCAM      | Weights 2D activations by average gradient |
+| GradCAM++    | Similar to GradCAM, but uses second‑order gradients |
+| XGradCAM     | Similar to GradCAM, but weights gradients by normalized activations |
+| EigenCAM     | Uses the first principal component of 2D activations (class‑agnostic, but works well) |
+| EigenGradCAM | Similar to EigenCAM, but class‑discriminative; uses first principal component of activation * gradient – looks similar to GradCAM but cleaner |
+| LayerCAM     | Spatially weights activations using positive gradients – works better for shallow layers |
+
+**Core functionality**
+
+- **Image loading & preprocessing** (`load_original_image`, `apply_transforms`)
+  - Supports multiple image formats
+  - Can keep original resolution or resize
+- **CAM generation** (`init_cam`, `create_cam_overlay_with_jet`)
+  - Supports ViT‑like network architectures
+  - Uses Jet colormap (red = high, blue = low)
+- **Image post‑processing** (`crop_and_resize_image`, `extract_detail_region_from_overlay`)
+  - Cropping and resizing
+  - Automatic extraction of high‑activation region details
+- **PDF output** (`save_single_image_pdf`, `save_cam_heatmap_pdf`)
+  - Generates PDFs without margins
+  - Supports colorbar
+
+**Output file structure**  
+For each class, four PDF files are generated:
+
+```bash
+{category}_original.pdf        # Original image (cropped + resized)
+{category}_cam_heatmap.pdf     # CAM heatmap
+{category}_cam_overlay.pdf     # CAM overlay
+{category}_detail_region.pdf   # High‑activation region detail
+```
+
+**Command line**:
+
+```bash
+python script.py \
+  --alpha path/to/alpha.png \
+  --delta path/to/delta.png \
+  --omicron path/to/omicron.png \
+  --else-cat path/to/else.png \
+  config.py \
+  --output-dir ./cam_results \
+  --method gradcam \
+  --target-layers layer1 layer2 \
+  --dpi 600 \
+  --crop-pixels 100 \
+  --target-size 1000
+```
+
+**Description of all parameters**:
+
+- `alpha/delta/omicron/else-cat`: Paths to the four class images
+- `config`: Model configuration file
+- `method`: CAM method (gradcam, gradcam++, eigencam, etc.)
+- `target-layers`: Names of target layers
+- `output-dir`: Output directory
+- `dpi`: PDF resolution (default 600)
+- `crop-pixels`: Number of pixels to crop (default 100)
+- `target-size`: Target image size (default 1000)
+- `cam-alpha`: CAM transparency (default 0.6)
+
+**Example (CNN)**: Visualize `MobileNetV3` using different methods.
+
+```
+python tools/vis_cam.py --alpha ./images/alpha.png --delta ./images/delta.png --omicron ./images/omicron.png --else-cat ./images/else.png ./configs/resnet50.py --output-dir ./cam_results --method gradcam --dpi 600 --crop-pixels 100 --target-size 1000 --cam-alpha 0.6
+```
