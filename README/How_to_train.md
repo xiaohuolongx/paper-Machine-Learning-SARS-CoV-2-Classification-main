@@ -34,3 +34,46 @@ python tools/train.py \
 - `--split-validation`：是否从训练集中划分验证集，划分比例默认0.2，否则直接将测试集用于验证
 - `--ratio`：从训练集中划分验证集的比例，默认0.2，且shuffle后随机从训练集某fold挑选
 - `--deterministic`：多GPU训练相关，暂不用设置
+
+
+Training on Your Own Dataset
+===========================
+
+- Confirm that `paper-Machine Learning-SARS-CoV-2-Classification-main/datas/annotations.txt` labels are ready.
+- Confirm that `train.txt` and `test.txt` under `paper-Machine Learning-SARS-CoV-2-Classification-main/datas/` correspond to `annotations.txt`.
+- Select the model you want to train and find the corresponding configuration file under `paper-Machine Learning-SARS-CoV-2-Classification-main/models/`.
+- Modify parameters according to the `Configuration File Explanation`.
+- Open a terminal in `paper-Machine Learning-SARS-CoV-2-Classification-main` and run:
+python tools/train.py models/mobilenet/mobilenet_v3_small.py
+
+text
+
+**Command line**:
+
+```bash
+python tools/train.py \
+    ${CONFIG_FILE} \
+    [--resume-from] \
+    [--seed] \
+    [--device] \
+    [--gpu-id] \
+    [--split-validation] \
+    [--ratio] \
+    [--deterministic] \
+Description of all parameters:
+
+config: Path to the model configuration file.
+
+--resume-from: Resume training from an interruption. Provide the path to the weight file. Make sure to resume correctly from a Last_Epoch***.pth file, e.g., --resume-from logs/SwinTransformer/2022-02-08-08-27-41/Last_Epoch15.pth.
+
+--seed: Set the random seed. Defaults to the environment setting.
+
+--device: Set training on GPU or CPU.
+
+--gpu-id: Specify the GPU device. Default is 0 (single-card setups usually keep it as 0, no need to change).
+
+--split-validation: Whether to split a validation set from the training set. Default split ratio is 0.2. Otherwise, the test set is directly used for validation.
+
+--ratio: Ratio for splitting the validation set from the training set. Default is 0.2. A random fold is selected from the training set after shuffling.
+
+--deterministic: Related to multi-GPU training; no need to set for now.
