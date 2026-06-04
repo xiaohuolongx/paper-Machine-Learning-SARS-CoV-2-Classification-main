@@ -49,3 +49,51 @@ python tools/batch_test.py datasets/test/Alpha models/mobilenet/mobilenet_v3_sma
 `--show'`:批量检测时是否显示图片
 
 
+**Model Evaluation**
+===========================
+
+## Evaluation Test Set
+- Confirm that the label file `paper-Machine Learning-SARS-CoV-2-Classification-main/datas/annotations.txt` is ready.
+- Confirm that `test.txt` under `paper-Machine Learning-SARS-CoV-2-Classification-main/datas/` corresponds to `annotations.txt`.
+- Locate the corresponding configuration file under `paper-Machine Learning-SARS-CoV-2-Classification-main/models/`.
+- Modify parameters according to the `Configuration File Explanation`, mainly changing the weight path.
+- Open a terminal in `paper-Machine Learning-SARS-CoV-2-Classification-main` and run:
+```
+python tools/evaluation.py models/mobilenet/mobilenet_v3_small.py
+```
+
+## Single Image Detection
+- Open a terminal in `paper-Machine Learning-SARS-CoV-2-Classification-main` and run:
+```
+python tools/single_test.py datasets/test/Alpha/95_2020-11-13.png models/mobilenet/mobilenet_v3_small.py
+```
+**Parameter Description**:
+
+`img` : Path to the single image to be tested.
+
+`config` : Model configuration file. Note that you need to modify the `ckpt` path under `data_cfg->test` in the configuration file; this weight will be used for prediction.
+
+`--classes-map` : Label file corresponding to the dataset. Default is `datas/annotations.txt`.
+
+`--device` : Device used for inference. Default is GPU.
+
+`--save-path` : Path to save the result. Default is not to save.
+
+## Batch Image Detection
+- Open a terminal in `paper-Machine Learning-SARS-CoV-2-Classification-main` and run:
+```
+python tools/batch_test.py datasets/test/Alpha models/mobilenet/mobilenet_v3_small.py --show
+```
+**Parameter Description**:
+
+`path` : Path to the folder containing images to be tested in batch.
+
+`config` : Model configuration file. Note that you need to modify the `ckpt` path under `data_cfg->test` in the configuration file; this weight will be used for prediction.
+
+`--classes-map` : Label file corresponding to the dataset. Default is `datas/annotations.txt`.
+
+`--device` : Device used for inference. Default is GPU.
+
+`--save-path` : Path to save the results. Default is not to save.
+
+`--show` : Whether to display images during batch detection.
